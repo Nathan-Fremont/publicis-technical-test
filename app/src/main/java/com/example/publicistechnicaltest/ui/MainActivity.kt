@@ -1,7 +1,8 @@
-package com.example.publicistechnicaltest
+package com.example.publicistechnicaltest.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.publicistechnicaltest.R
 
 class MainActivity : AppCompatActivity() {
 
