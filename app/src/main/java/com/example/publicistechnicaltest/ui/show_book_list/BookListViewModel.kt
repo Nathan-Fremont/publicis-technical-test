@@ -9,8 +9,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
 class BookListViewModel(
-    private val getBookListUseCase: GetBookListUseCase,
-    private val bookUiMapper: BookUiMapper
+    getBookListUseCase: GetBookListUseCase,
+    bookUiMapper: BookUiMapper
 ) : BaseViewModel<List<BookUi>>(){
 
     init {

@@ -43,19 +43,21 @@ class BookListFragment : Fragment() {
         }
 
         viewModel.uiData.observe(viewLifecycleOwner, Observer { listImages ->
-            Timber.d("Got some images, will submit them to adapter")
+            Timber.d("Got books, will submit them to adapter")
             selectedItems.clear()
             recyclerAdapter.submitList(listImages)
         })
 
         fragment_book_list_floating_button.setOnClickListener {
             if (selectedItems.size > 0) {
+                Timber.d("Selected enough books, redirect to fragment")
                 val action =
                     BookListFragmentDirections.actionBookListFragmentToCartFragment(
                         selectedItems.toTypedArray()
                     )
                 findNavController().navigate(action)
             } else {
+                Timber.d("No books selected, show toast")
                 Toast
                     .makeText(
                         context,

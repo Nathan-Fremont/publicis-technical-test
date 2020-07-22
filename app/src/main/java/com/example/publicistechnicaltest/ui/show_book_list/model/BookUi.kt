@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 data class BookUi(
     val isbn: String,
     val title: String,
-    val price: Int,
+    val price: Double,
     val cover: String,
     val synopsis: List<String>
 ) : Parcelable

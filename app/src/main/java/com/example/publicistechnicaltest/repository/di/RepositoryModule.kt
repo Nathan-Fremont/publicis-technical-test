@@ -6,6 +6,7 @@ import com.example.publicistechnicaltest.repository.RepositoryImpl
 import com.example.publicistechnicaltest.repository.api.ApiDataSourceImpl
 import com.example.publicistechnicaltest.repository.api.retrofit.ApiRetrofitFactory
 import com.example.publicistechnicaltest.repository.mapper.BookListMapper
+import com.example.publicistechnicaltest.repository.mapper.CommercialOfferListMapper
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -29,7 +30,8 @@ val repositoryModule = module {
     single {
         RepositoryImpl(
             apiDataSource = get(),
-            bookListMapper = get()
+            bookListMapper = get(),
+            commercialOfferListMapper = get()
         ) as Repository
     }
 }
@@ -37,6 +39,9 @@ val repositoryModule = module {
 val apiMapperModule = module {
     single {
         BookListMapper()
+    }
+    single {
+        CommercialOfferListMapper()
     }
 }
 
