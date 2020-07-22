@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.publicistechnicaltest.R
 import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
 import com.example.publicistechnicaltest.ui.show_book_list.view.adapter.BookListAdapter
@@ -38,7 +38,7 @@ class BookListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         fragment_book_list_recycler_view.apply {
-            layoutManager = LinearLayoutManager(view.context)
+            layoutManager = GridLayoutManager(view.context, 2)
             adapter = recyclerAdapter
         }
 

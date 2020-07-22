@@ -13,7 +13,6 @@ class BookListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .get()
             .load(bookUi.cover)
             .into(itemView.holder_book_list_cover)
-        itemView.holder_book_list_title.text = bookUi.title
         itemView.holder_book_list_checkbox.isChecked = isSelected
     }
 
