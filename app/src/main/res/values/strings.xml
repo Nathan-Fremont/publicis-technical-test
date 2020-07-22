@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PublicisTechnicalTest</string>
+    <string name="fragment_book_list_error_selected_not_enough">Veuillez sélectionner au moins 1 livre.</string>
 </resources>

@@ -5,5 +5,17 @@
     <fragment
         android:id="@+id/bookListFragment"
         android:name="com.example.publicistechnicaltest.ui.show_book_list.BookListFragment"
-        android:label="BookListFragment" />
+        android:label="BookListFragment" >
+        <action
+            android:id="@+id/action_bookListFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.publicistechnicaltest.ui.cart.CartFragment"
+        android:label="CartFragment" >
+        <argument
+            android:name="selectedBookList"
+            app:argType="com.example.publicistechnicaltest.ui.show_book_list.model.BookUi[]" />
+    </fragment>
 </navigation>

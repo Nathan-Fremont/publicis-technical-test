@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.publicistechnicaltest.R
 import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
@@ -46,22 +48,22 @@ class BookListFragment : Fragment() {
             recyclerAdapter.submitList(listImages)
         })
 
-//        fragment_search_images_floating_button.setOnClickListener {
-//            if (selectedItems.size >= 2) {
-//                val action =
-//                    SearchImagesFragmentDirections.actionSearchImagesFragmentToDetailsImagesFragment(
-//                        selectedItems.toTypedArray()
-//                    )
-//                findNavController().navigate(action)
-//            } else {
-//                Toast
-//                    .makeText(
-//                        context,
-//                        getString(R.string.fragment_search_images_error_selected_not_enough),
-//                        Toast.LENGTH_SHORT
-//                    )
-//                    .show()
-//            }
-//        }
+        fragment_book_list_floating_button.setOnClickListener {
+            if (selectedItems.size > 0) {
+                val action =
+                    BookListFragmentDirections.actionBookListFragmentToCartFragment(
+                        selectedItems.toTypedArray()
+                    )
+                findNavController().navigate(action)
+            } else {
+                Toast
+                    .makeText(
+                        context,
+                        getString(R.string.fragment_book_list_error_selected_not_enough),
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+        }
     }
 }
