@@ -33,27 +33,34 @@ class CartViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = { commercialOffers ->
-                    val total = books.sumByDouble{ it.price }
-                    Timber.d("Total for books = $total")
-                    val percentageOffer = commercialOffers.find { it.type == CommercialOfferType.PERCENTAGE }
+                    val rawTotal = books.sumByDouble { it.price }
+                    Timber.d("Total for books = $rawTotal")
+                    val percentageOffer =
+                        commercialOffers.find { it.type == CommercialOfferType.PERCENTAGE }
                     val minusOffer = commercialOffers.find { it.type == CommercialOfferType.MINUS }
                     val sliceOffer = commercialOffers.find { it.type == CommercialOfferType.SLICE }
 
-                    val percentagePrice = if (percentageOffer?.value != null) total - percentageOffer.value.times(total).div(100) else null
+                    val percentagePrice =
+                        if (percentageOffer?.value != null) rawTotal - percentageOffer.value.times(
+                            rawTotal
+                        ).div(100) else null
                     Timber.d("percentagePrice = $percentagePrice")
 
-                    val minusPrice = if (minusOffer?.value != null) total - minusOffer.value else null
+                    val minusPrice =
+                        if (minusOffer?.value != null) rawTotal - minusOffer.value else null
                     Timber.d("minusPrice = $minusPrice")
 
-                    val slicePrice = if (sliceOffer?.sliceValue != null) total - ((total / sliceOffer.sliceValue).toInt() * sliceOffer.value).toDouble() else null
+                    val slicePrice =
+                        if (sliceOffer?.sliceValue != null) rawTotal - ((rawTotal / sliceOffer.sliceValue).toInt() * sliceOffer.value).toDouble() else null
                     Timber.d("slicePrice = $slicePrice")
 
-                    val bestPrice = listOfNotNull(total, percentagePrice, minusPrice, slicePrice).min()!!
-                    Timber.d("bestPrice = $bestPrice")
+                    val bestCalculatedPrice =
+                        listOfNotNull(rawTotal, percentagePrice, minusPrice, slicePrice).min()!!
+                    Timber.d("bestPrice = $bestCalculatedPrice")
 
                     val newUiData = PageCartUi(
-                        total,
-                        bestPrice,
+                        rawTotal,
+                        bestCalculatedPrice,
                         percentagePrice,
                         minusPrice,
                         slicePrice
@@ -62,4 +69,6 @@ class CartViewModel(
                 }
             )
     }
+
+
 }

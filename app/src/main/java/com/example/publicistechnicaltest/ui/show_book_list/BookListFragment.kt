@@ -37,6 +37,7 @@ class BookListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO: Add number of selected books on top of floating button
         fragment_book_list_recycler_view.apply {
             layoutManager = GridLayoutManager(view.context, 2)
             adapter = recyclerAdapter

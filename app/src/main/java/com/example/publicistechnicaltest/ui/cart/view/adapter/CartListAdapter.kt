@@ -1,43 +1,30 @@
-package com.example.publicistechnicaltest.ui.show_book_list.view.adapter
+package com.example.publicistechnicaltest.ui.cart.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.publicistechnicaltest.R
+import com.example.publicistechnicaltest.ui.cart.view.CartListViewHolder
 import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
-import com.example.publicistechnicaltest.ui.show_book_list.view.BookListViewHolder
 import timber.log.Timber
 
-class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapter<BookUi, BookListViewHolder>(diffCallback) {
+class CartListAdapter : ListAdapter<BookUi, CartListViewHolder>(diffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookListViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
         val view =
             LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.holder_book_list, parent, false)
-        val holder = BookListViewHolder(view).apply {
-            itemView.setOnClickListener {
-                val bookUi = getItem(adapterPosition)
-                Timber.d("Click on item at position $adapterPosition")
-                if (selectedItems.contains(bookUi)) {
-                    selectedItems.remove(bookUi)
-                } else {
-                    selectedItems.add(bookUi)
-                }
-                clicked()
-            }
-        }
+                .inflate(R.layout.holder_cart_list, parent, false)
+        val holder = CartListViewHolder(view)
         return holder
     }
 
-    override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CartListViewHolder, position: Int) {
         val bookUi = getItem(position)
-        val isSelected = selectedItems.contains(bookUi)
-        Timber.d("isSelected = $isSelected")
+        Timber.d("Binding data for $position")
         holder.bind(
-            bookUi,
-            isSelected
+            bookUi
         )
     }
 
