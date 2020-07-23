@@ -11,9 +11,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.publicistechnicaltest.R
 import com.example.publicistechnicaltest.databinding.FragmentCartBinding
+import com.example.publicistechnicaltest.domain.model.CommercialOfferType
 import com.example.publicistechnicaltest.ui.cart.view.adapter.CartListAdapter
 import kotlinx.android.synthetic.main.fragment_cart.*
+import okhttp3.internal.format
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class CartFragment : Fragment() {
 
@@ -34,8 +37,25 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.uiData.observe(viewLifecycleOwner, Observer { cartPageData ->
-            fragment_cart_total.text = getString(R.string.common_number_with_money, cartPageData.rawPriceForSelectedBooks)
-            fragment_cart_calculated.text = getString(R.string.common_number_with_money, cartPageData.bestPriceForSelectedBooks)
+            fragment_cart_raw_total.text = getString(R.string.common_number_with_money, cartPageData.rawPriceForSelectedBooks)
+
+            val diff = cartPageData.rawPriceForSelectedBooks - cartPageData.bestPriceForSelectedBooks
+            Timber.d("Best offer is ${cartPageData.bestOfferForSelectedBooks?.type}")
+            Timber.d("Diff is $diff")
+            val discountDetails = when (cartPageData.bestOfferForSelectedBooks?.type) {
+                CommercialOfferType.PERCENTAGE -> {
+                    "(${cartPageData.bestOfferForSelectedBooks.value} %%)"
+                }
+                CommercialOfferType.MINUS -> {
+                    ""
+                }
+                CommercialOfferType.SLICE -> {
+                    getString(R.string.fragment_cart_discount_details, cartPageData.bestOfferForSelectedBooks.value, cartPageData.bestOfferForSelectedBooks.sliceValue)
+                }
+                else -> ""
+            }
+            fragment_cart_eligible_discount.text = format("%.2f € $discountDetails", diff)
+            fragment_cart_discount_total.text = getString(R.string.common_number_with_money, cartPageData.bestPriceForSelectedBooks)
             binding.viewmodel = viewModel
         })
 

@@ -43,7 +43,7 @@ class CartViewModel(
                     val percentagePrice =
                         if (percentageOffer?.value != null) rawTotal - percentageOffer.value.times(
                             rawTotal
-                        ).div(100) else null
+                        ).div(100.0) else null
                     Timber.d("percentagePrice = $percentagePrice")
 
                     val minusPrice =
@@ -58,9 +58,25 @@ class CartViewModel(
                         listOfNotNull(rawTotal, percentagePrice, minusPrice, slicePrice).min()!!
                     Timber.d("bestPrice = $bestCalculatedPrice")
 
+                    val bestOffer = when {
+                        percentagePrice == bestCalculatedPrice -> {
+                            percentageOffer
+                        }
+                        minusPrice == bestCalculatedPrice -> {
+                            minusOffer
+                        }
+                        slicePrice == bestCalculatedPrice -> {
+                            sliceOffer
+                        }
+                        else -> {
+                            null
+                        }
+                    }
+
                     val newUiData = PageCartUi(
                         rawTotal,
                         bestCalculatedPrice,
+                        bestOffer,
                         percentagePrice,
                         minusPrice,
                         slicePrice
