@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="300dp"
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@android:color/darker_gray">
 
@@ -23,35 +23,24 @@
                 android:layout_height="0dp"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/holder_book_list_title"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="@dimen/spacing_value"
-                android:layout_marginTop="@dimen/spacing_value"
-                android:layout_marginEnd="@dimen/spacing_value"
-                android:layout_marginBottom="@dimen/spacing_value"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/holder_book_list_checkbox"
-                app:layout_constraintStart_toEndOf="@+id/holder_book_list_cover"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <CheckBox
                 android:id="@+id/holder_book_list_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_value"
-                android:layout_marginEnd="@dimen/spacing_value"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/spacing_value_half"
+                android:layout_marginEnd="@dimen/spacing_value_half"
+                android:background="@drawable/holder_book_bookmark"
+                android:button="@null"
+                android:buttonTint="@android:color/white"
                 android:clickable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:background="@color/black_50"
-                android:buttonTint="@android:color/white"/>
+                tools:checked="true" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

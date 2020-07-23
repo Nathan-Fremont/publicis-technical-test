@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">PublicisTechnicalTest</string>
+
+    <!-- COMMON STRINGS -->
+    <string name="common_string_with_money">%s €</string>
+    <string name="common_number_with_money">%.2f €</string>
+
+    <!-- FRAGMENT_BOOK_LIST -->
     <string name="fragment_book_list_error_selected_not_enough">Veuillez sélectionner au moins 1 livre.</string>
+
+    <!-- FRAGMENT_CART -->
+    <string name="fragment_cart_total_raw">Total :</string>
+    <string name="fragment_cart_total_calculated">Total avec réductions :</string>
+    <string name="fragment_cart_eligible_discount">Réduction éligible :</string>
+    <string name="fragment_cart_discount_details">(- %.2f € par tranche de %.2f €)</string>
 </resources>
