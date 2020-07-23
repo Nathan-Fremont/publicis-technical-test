@@ -2,6 +2,7 @@ package com.example.publicistechnicaltest.ui.show_book_list.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.publicistechnicaltest.R
@@ -9,7 +10,7 @@ import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
 import com.example.publicistechnicaltest.ui.show_book_list.view.BookListViewHolder
 import timber.log.Timber
 
-class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapter<BookUi, BookListViewHolder>(diffCallback) {
+class BookListAdapter(private val selectedItems: MutableLiveData<ArrayList<BookUi>>) : ListAdapter<BookUi, BookListViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookListViewHolder {
         val view =
@@ -18,13 +19,14 @@ class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapte
                 .inflate(R.layout.holder_book_list, parent, false)
         val holder = BookListViewHolder(view).apply {
             itemView.setOnClickListener {
-                val imageUi = getItem(adapterPosition)
+                val bookUi = getItem(adapterPosition)
                 Timber.d("Click on item at position $adapterPosition")
-                if (selectedItems.contains(imageUi)) {
-                    selectedItems.remove(imageUi)
+                if (selectedItems.value?.contains(bookUi) == true) {
+                    selectedItems.value?.remove(bookUi)
                 } else {
-                    selectedItems.add(imageUi)
+                    selectedItems.value?.add(bookUi)
                 }
+                selectedItems.postValue(selectedItems.value)
                 clicked()
             }
         }
@@ -32,11 +34,11 @@ class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapte
     }
 
     override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
-        val imageUi = getItem(position)
-        val isSelected = selectedItems.contains(imageUi)
+        val bookUi = getItem(position)
+        val isSelected = selectedItems.value?.contains(bookUi) == true
         Timber.d("isSelected = $isSelected")
         holder.bind(
-            imageUi,
+            bookUi,
             isSelected
         )
     }
