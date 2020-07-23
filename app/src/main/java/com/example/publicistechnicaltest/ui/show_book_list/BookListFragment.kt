@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,7 +25,7 @@ class BookListFragment : Fragment() {
             selectedItems
         )
     }
-    private val selectedItems = ArrayList<BookUi>()
+    private val selectedItems: MutableLiveData<ArrayList<BookUi>> = MutableLiveData(ArrayList())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,16 +46,23 @@ class BookListFragment : Fragment() {
 
         viewModel.uiData.observe(viewLifecycleOwner, Observer { listImages ->
             Timber.d("Got books, will submit them to adapter")
-            selectedItems.clear()
+            selectedItems.value?.clear()
             recyclerAdapter.submitList(listImages)
         })
 
+        selectedItems.observe(viewLifecycleOwner, Observer { selectedBooks ->
+            val selectedBooksNumber = selectedBooks.count()
+            Timber.d("Selected items are not $selectedBooksNumber")
+            fragment_book_list_selected_books_number.visibility = if (selectedBooksNumber > 0) View.VISIBLE else View.GONE
+            fragment_book_list_selected_books_number.text = "$selectedBooksNumber"
+        })
+
         fragment_book_list_floating_button.setOnClickListener {
-            if (selectedItems.size > 0) {
+            if (selectedItems.value?.isNotEmpty() == true) {
                 Timber.d("Selected enough books, redirect to fragment")
                 val action =
                     BookListFragmentDirections.actionBookListFragmentToCartFragment(
-                        selectedItems.toTypedArray()
+                        selectedItems.value!!.toTypedArray()
                     )
                 findNavController().navigate(action)
             } else {

@@ -2,6 +2,7 @@ package com.example.publicistechnicaltest.ui.show_book_list.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.publicistechnicaltest.R
@@ -9,7 +10,7 @@ import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
 import com.example.publicistechnicaltest.ui.show_book_list.view.BookListViewHolder
 import timber.log.Timber
 
-class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapter<BookUi, BookListViewHolder>(diffCallback) {
+class BookListAdapter(private val selectedItems: MutableLiveData<ArrayList<BookUi>>) : ListAdapter<BookUi, BookListViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookListViewHolder {
         val view =
@@ -20,11 +21,12 @@ class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapte
             itemView.setOnClickListener {
                 val bookUi = getItem(adapterPosition)
                 Timber.d("Click on item at position $adapterPosition")
-                if (selectedItems.contains(bookUi)) {
-                    selectedItems.remove(bookUi)
+                if (selectedItems.value?.contains(bookUi) == true) {
+                    selectedItems.value?.remove(bookUi)
                 } else {
-                    selectedItems.add(bookUi)
+                    selectedItems.value?.add(bookUi)
                 }
+                selectedItems.postValue(selectedItems.value)
                 clicked()
             }
         }
@@ -33,7 +35,7 @@ class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapte
 
     override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
         val bookUi = getItem(position)
-        val isSelected = selectedItems.contains(bookUi)
+        val isSelected = selectedItems.value?.contains(bookUi) == true
         Timber.d("isSelected = $isSelected")
         holder.bind(
             bookUi,
@@ -42,8 +44,8 @@ class BookListAdapter(private val selectedItems: ArrayList<BookUi>) : ListAdapte
     }
 
     override fun getItemId(position: Int): Long {
-        val bookUi = getItem(position)
-        return bookUi.hashCode().toLong()
+        val imageUi = getItem(position)
+        return imageUi.hashCode().toLong()
     }
 
     companion object {
