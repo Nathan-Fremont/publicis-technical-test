@@ -46,7 +46,6 @@ class BookListFragment : Fragment() {
 
         viewModel.uiData.observe(viewLifecycleOwner, Observer { eitherUiData ->
             Timber.d("Got books, will submit them to adapter")
-            selectedItems.value?.clear()
             fragment_book_list_refrehs_list.isRefreshing = false
 
             when (eitherUiData) {
@@ -59,6 +58,14 @@ class BookListFragment : Fragment() {
             }
         })
 
+        if (viewModel.uiData.value == null
+            || viewModel.uiData.value is Either.Left
+            && (viewModel.uiData.value as Either.Left<List<BookUi>>).value.isNullOrEmpty()
+            || viewModel.uiData.value is Either.Right
+        ) {
+            viewModel.getBookList()
+        }
+
         fragment_book_list_refrehs_list.setOnRefreshListener {
             viewModel.getBookList()
         }
@@ -66,7 +73,8 @@ class BookListFragment : Fragment() {
         selectedItems.observe(viewLifecycleOwner, Observer { selectedBooks ->
             val selectedBooksNumber = selectedBooks.count()
             Timber.d("Selected items are not $selectedBooksNumber")
-            fragment_book_list_selected_books_number.visibility = if (selectedBooksNumber > 0) View.VISIBLE else View.GONE
+            fragment_book_list_selected_books_number.visibility =
+                if (selectedBooksNumber > 0) View.VISIBLE else View.GONE
             fragment_book_list_selected_books_number.text = "$selectedBooksNumber"
         })
 

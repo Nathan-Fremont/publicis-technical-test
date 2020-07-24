@@ -16,10 +16,6 @@ class BookListViewModel(
     private val bookUiMapper: BookUiMapper
 ) : BaseViewModel<Either<List<BookUi>, PageBookListErrorUi>>() {
 
-    init {
-        getBookList()
-    }
-
     fun getBookList() {
         getBookListUseCase()
             .subscribeOn(Schedulers.io())

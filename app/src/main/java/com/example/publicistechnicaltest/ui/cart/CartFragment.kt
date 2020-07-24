@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.publicistechnicaltest.R
@@ -67,7 +68,7 @@ class CartFragment : Fragment() {
                 }
                 is Either.Right -> {
                     Toast.makeText(context, eitherUiData.value.error, Toast.LENGTH_LONG).show()
-                    parentFragmentManager.popBackStack()
+                    findNavController().popBackStack()
                 }
             }
 
