@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.publicistechnicaltest.R
 import com.example.publicistechnicaltest.databinding.FragmentCartBinding
 import com.example.publicistechnicaltest.domain.model.CommercialOfferType
+import com.example.publicistechnicaltest.domain.model.Either
 import com.example.publicistechnicaltest.ui.cart.view.adapter.CartListAdapter
 import kotlinx.android.synthetic.main.fragment_cart.*
 import okhttp3.internal.format
@@ -36,27 +38,39 @@ class CartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.uiData.observe(viewLifecycleOwner, Observer { cartPageData ->
-            fragment_cart_raw_total.text = getString(R.string.common_number_with_money, cartPageData.rawPriceForSelectedBooks)
+        viewModel.uiData.observe(viewLifecycleOwner, Observer { eitherUiData ->
 
-            val diff = cartPageData.rawPriceForSelectedBooks - cartPageData.bestPriceForSelectedBooks
-            Timber.d("Best offer is ${cartPageData.bestOfferForSelectedBooks?.type}")
-            Timber.d("Diff is $diff")
-            val discountDetails = when (cartPageData.bestOfferForSelectedBooks?.type) {
-                CommercialOfferType.PERCENTAGE -> {
-                    "(${cartPageData.bestOfferForSelectedBooks.value} %%)"
+            when (eitherUiData) {
+                is Either.Left -> {
+                    val cartPageData = eitherUiData.value
+
+                    fragment_cart_raw_total.text = getString(R.string.common_number_with_money, cartPageData.rawPriceForSelectedBooks)
+
+                    val diff = cartPageData.rawPriceForSelectedBooks - cartPageData.bestPriceForSelectedBooks
+                    Timber.d("Best offer is ${cartPageData.bestOfferForSelectedBooks?.type}")
+                    Timber.d("Diff is $diff")
+                    val discountDetails = when (cartPageData.bestOfferForSelectedBooks?.type) {
+                        CommercialOfferType.PERCENTAGE -> {
+                            "(${cartPageData.bestOfferForSelectedBooks.value} %%)"
+                        }
+                        CommercialOfferType.MINUS -> {
+                            ""
+                        }
+                        CommercialOfferType.SLICE -> {
+                            getString(R.string.fragment_cart_discount_details, cartPageData.bestOfferForSelectedBooks.value, cartPageData.bestOfferForSelectedBooks.sliceValue)
+                        }
+                        else -> ""
+                    }
+                    fragment_cart_eligible_discount.text = format("%.2f € $discountDetails", diff)
+                    fragment_cart_discount_total.text = getString(R.string.common_number_with_money, cartPageData.bestPriceForSelectedBooks)
+                    binding.viewmodel = viewModel
                 }
-                CommercialOfferType.MINUS -> {
-                    ""
+                is Either.Right -> {
+                    Toast.makeText(context, eitherUiData.value.error, Toast.LENGTH_LONG).show()
+                    parentFragmentManager.popBackStack()
                 }
-                CommercialOfferType.SLICE -> {
-                    getString(R.string.fragment_cart_discount_details, cartPageData.bestOfferForSelectedBooks.value, cartPageData.bestOfferForSelectedBooks.sliceValue)
-                }
-                else -> ""
             }
-            fragment_cart_eligible_discount.text = format("%.2f € $discountDetails", diff)
-            fragment_cart_discount_total.text = getString(R.string.common_number_with_money, cartPageData.bestPriceForSelectedBooks)
-            binding.viewmodel = viewModel
+
         })
 
         viewModel.getCommercialOffersForBooks(navArgs.selectedBookList.toList())
