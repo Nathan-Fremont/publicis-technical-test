@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.publicistechnicaltest.R
+import com.example.publicistechnicaltest.domain.model.Either
 import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
 import com.example.publicistechnicaltest.ui.show_book_list.view.adapter.BookListAdapter
 import kotlinx.android.synthetic.main.fragment_book_list.*
@@ -38,22 +39,42 @@ class BookListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: Add number of selected books on top of floating button
         fragment_book_list_recycler_view.apply {
             layoutManager = GridLayoutManager(view.context, 2)
             adapter = recyclerAdapter
         }
 
-        viewModel.uiData.observe(viewLifecycleOwner, Observer { listImages ->
+        viewModel.uiData.observe(viewLifecycleOwner, Observer { eitherUiData ->
             Timber.d("Got books, will submit them to adapter")
-            selectedItems.value?.clear()
-            recyclerAdapter.submitList(listImages)
+            fragment_book_list_refrehs_list.isRefreshing = false
+
+            when (eitherUiData) {
+                is Either.Left -> {
+                    recyclerAdapter.submitList(eitherUiData.value)
+                }
+                is Either.Right -> {
+                    Toast.makeText(context, eitherUiData.value.error, Toast.LENGTH_LONG).show()
+                }
+            }
         })
+
+        if (viewModel.uiData.value == null
+            || viewModel.uiData.value is Either.Left
+            && (viewModel.uiData.value as Either.Left<List<BookUi>>).value.isNullOrEmpty()
+            || viewModel.uiData.value is Either.Right
+        ) {
+            viewModel.getBookList()
+        }
+
+        fragment_book_list_refrehs_list.setOnRefreshListener {
+            viewModel.getBookList()
+        }
 
         selectedItems.observe(viewLifecycleOwner, Observer { selectedBooks ->
             val selectedBooksNumber = selectedBooks.count()
             Timber.d("Selected items are not $selectedBooksNumber")
-            fragment_book_list_selected_books_number.visibility = if (selectedBooksNumber > 0) View.VISIBLE else View.GONE
+            fragment_book_list_selected_books_number.visibility =
+                if (selectedBooksNumber > 0) View.VISIBLE else View.GONE
             fragment_book_list_selected_books_number.text = "$selectedBooksNumber"
         })
 

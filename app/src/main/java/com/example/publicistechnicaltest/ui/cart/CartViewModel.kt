@@ -1,8 +1,11 @@
 package com.example.publicistechnicaltest.ui.cart
 
+import com.example.publicistechnicaltest.R
 import com.example.publicistechnicaltest.domain.model.CommercialOfferType
+import com.example.publicistechnicaltest.domain.model.Either
 import com.example.publicistechnicaltest.domain.usecase.GetCommercialOffersUseCase
 import com.example.publicistechnicaltest.ui.cart.mapper.CommercialOfferUiMapper
+import com.example.publicistechnicaltest.ui.cart.model.PageCartErrorUi
 import com.example.publicistechnicaltest.ui.cart.model.PageCartUi
 import com.example.publicistechnicaltest.ui.common.BaseViewModel
 import com.example.publicistechnicaltest.ui.show_book_list.model.BookUi
@@ -15,7 +18,7 @@ class CartViewModel(
     private val getCommercialOffersUseCase: GetCommercialOffersUseCase,
     private val commercialOfferUiMapper: CommercialOfferUiMapper
 ) :
-    BaseViewModel<PageCartUi>() {
+    BaseViewModel<Either<PageCartUi, PageCartErrorUi>>() {
 
     fun getCommercialOffersForBooks(books: List<BookUi>) {
         val booksIsbn = books.joinToString(separator = ",") { it.isbn }
@@ -81,10 +84,21 @@ class CartViewModel(
                         minusPrice,
                         slicePrice
                     )
-                    postUiData(newUiData)
+                    postUiData(Either.Left(newUiData))
+                },
+                onError = {
+                    postUiData(
+                        Either.Right(
+                            PageCartErrorUi(
+                                R.string.common_error_no_connection
+                            )
+                        )
+                    )
                 }
             )
     }
 
-
+    fun isBestOfferVisible(): Boolean {
+        return (uiData.value is Either.Left && (uiData.value as Either.Left<PageCartUi>).value.bestOfferForSelectedBooks != null)
+    }
 }

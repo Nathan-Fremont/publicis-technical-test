@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_value_double"
                 android:text="@string/fragment_cart_eligible_discount"
-                android:visibility="@{viewmodel.uiData.bestOfferForSelectedBooks != null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewmodel.bestOfferVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintStart_toStartOf="@+id/textView"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -65,7 +65,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_value"
-                android:visibility="@{viewmodel.uiData.bestOfferForSelectedBooks != null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{viewmodel.bestOfferVisible ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView3"
                 app:layout_constraintTop_toTopOf="@+id/textView3"
